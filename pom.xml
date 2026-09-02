@@ -31,6 +31,10 @@
                 <version>3.1.0</version>
                 <configuration>
                     <mainClass>com.quant.engine.MatchingEngineBootstrapper</mainClass>
+                    <compilerArgs>
+                        <arg>--add-exports</arg>
+                        <arg>java.base/jdk.internal.vm.annotation=ALL-UNNAMED</arg>
+                    </compilerArgs>
                 </configuration>
             </plugin>
         </plugins>
