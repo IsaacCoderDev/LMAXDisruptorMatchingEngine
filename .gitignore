@@ -1,0 +1,57 @@
+# ==========================================
+# Maven Build Outputs
+# ==========================================
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.next
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+
+# ==========================================
+# Java Compiled Artifacts & Logs
+# ==========================================
+*.class
+*.jar
+*.war
+*.ear
+*.nar
+*.log
+*.tmp
+hs_err_pid*
+replay_pid*
+
+# ==========================================
+# IntelliJ IDEA
+# ==========================================
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# ==========================================
+# Eclipse
+# ==========================================
+.metadata
+.classpath
+.project
+.settings/
+.factorypath
+*.tmp
+*.bak
+
+# ==========================================
+# Visual Studio Code
+# ==========================================
+.vscode/
+
+# ==========================================
+# Operating System Files
+# ==========================================
+.DS_Store
+Thumbs.db
