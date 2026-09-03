@@ -10,8 +10,6 @@ import java.nio.ByteBuffer;
 
 public class MatchingEngineBootstrapper {
     public static void main(String[] args) {
-        // The size of the Ring Buffer MUST be a power of 2 (e.g., 1024, 4096, 1048576).
-        // This allows the Disruptor to use bitwise AND (&) for lightning-fast modulo operations.
         int bufferSize = 1048576; 
 
         Disruptor<OrderEvent> disruptor = new Disruptor<>(
@@ -22,23 +20,33 @@ public class MatchingEngineBootstrapper {
                 new YieldingWaitStrategy()
         );
 
+        // ====================================================================
+        // THE DIAMOND PIPELINE
+        // ====================================================================
+        RiskValidator riskValidator = new RiskValidator();
+        Journaler journaler = new Journaler();
+        MatchingEngineHandler matchingEngine = new MatchingEngineHandler();
+
+        // 1. handleEventsWith() assigns handlers to process immediately upon publication.
+        disruptor.handleEventsWith(riskValidator, journaler)
+                 .then(matchingEngine);
+
+        // Boot the engine
         disruptor.start();
 
         RingBuffer<OrderEvent> ringBuffer = disruptor.getRingBuffer();
         OrderProducer producer = new OrderProducer(ringBuffer);
 
-        System.out.println("LMAX Disruptor Booted. Pre-allocated 1,048,576 OrderEvents.");
+        System.out.println("LMAX Disruptor Booted. Pipeline: [Risk | Journal] -> [Matching Engine]");
 
-        // Simulate incoming UDP/TCP traffic
         ByteBuffer mockNetworkPacket = ByteBuffer.allocate(35);
-        mockNetworkPacket.putLong(1001L);
-        mockNetworkPacket.putDouble(50000.50);
-        mockNetworkPacket.putDouble(2.5);
-        mockNetworkPacket.putShort((short) 1);
-        mockNetworkPacket.put((byte) 0);
+        mockNetworkPacket.putLong(1001L);      
+        mockNetworkPacket.putDouble(50000.50); 
+        mockNetworkPacket.putDouble(2.5);      
+        mockNetworkPacket.putShort((short) 1); 
+        mockNetworkPacket.put((byte) 0);       
         mockNetworkPacket.flip();
 
-        // Push the mock packet into the pipeline
         producer.onData(mockNetworkPacket);
     }
 }
