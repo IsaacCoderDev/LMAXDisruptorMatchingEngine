@@ -39,14 +39,7 @@ public class MatchingEngineBootstrapper {
 
         System.out.println("LMAX Disruptor Booted. Pipeline: [Risk | Journal] -> [Matching Engine]");
 
-        ByteBuffer mockNetworkPacket = ByteBuffer.allocate(35);
-        mockNetworkPacket.putLong(1001L);      
-        mockNetworkPacket.putDouble(50000.50); 
-        mockNetworkPacket.putDouble(2.5);      
-        mockNetworkPacket.putShort((short) 1); 
-        mockNetworkPacket.put((byte) 0);       
-        mockNetworkPacket.flip();
-
-        producer.onData(mockNetworkPacket);
+        UdpFeedHandler feedHandler = new UdpFeedHandler(producer);
+        feedHandler.listen(9000);
     }
 }
